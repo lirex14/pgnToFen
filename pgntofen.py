@@ -26,9 +26,12 @@ class PgnToFen:
     lastMove = 'Before first move'
     fens = []
     result = ''
+    halfmove = 0
+    fullmove = 1
 
     def getFullFen(self):
-        return self.getFen() + ' ' + ('w ' if self.whiteToMove else 'b ') + self.enpassant + ' ' + (self.castlingRights if self.castlingRights else '-')
+        return self.getFen() + ' ' + ('w ' if self.whiteToMove else 'b ') + self.enpassant + ' ' + (self.castlingRights if self.castlingRights else '-') \
+               +" " +str(self.halfmove) +" " +str(self.fullmove)
 
     def getFen(self):
         fenpos = ''
@@ -77,7 +80,7 @@ class PgnToFen:
         for moves in open(file, 'rt').readlines():
 
             if moves[:1] == '[':
-                #print('game_info line: ', moves)
+                print('game_info line: ', moves)
                 game_info.append(moves)
                 continue
             if moves[:2] == '1.':
@@ -104,11 +107,12 @@ class PgnToFen:
                     pgnMoves = ''
             if(started):
                 pgnMoves = pgnMoves + ' ' + moves.replace('\n', '').replace('\r', '')
-        return pgnGames
+        return fens
 
     def pgnToFen(self, moves):
         try:
             loopC = 1
+            moveCounter = 1
             for move in moves:
                 self.lastMove = move
                 self.DEBUG and print('=========')
@@ -118,6 +122,11 @@ class PgnToFen:
                 self.move(move)
                 self.DEBUG and print('after move:')
                 self.DEBUG and self.printBoard()
+                if loopC % 2 is not 0:
+                    self.fullmove = moveCounter
+                else:
+                    self.fullmove = int(loopC / 2)
+                    moveCounter+=1
                 loopC = loopC + 1
                 self.fens.append(self.getFullFen())
             self.sucess = True
