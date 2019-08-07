@@ -28,6 +28,7 @@ class PgnToFen:
     result = ''
     halfmove = 0
     fullmove = 1
+    gameMoves = ''
 
     def getFullFen(self):
         return self.getFen() + ' ' + ('w ' if self.whiteToMove else 'b ') + self.enpassant + ' ' + (self.castlingRights if self.castlingRights else '-') \
@@ -63,8 +64,8 @@ class PgnToFen:
             if(result in ['1/2-1/2', '1-0', '0-1']):
                 self.result = result
                 pgnMoves = pgnMoves[:-1]
-            print('pgnMoves')
-            print(pgnMoves)
+            # print('pgnMoves')
+            print(pgnMoves[1:])
             return self.pgnToFen(pgnMoves)
         else:
             return self.pgnToFen(moves)
@@ -91,6 +92,10 @@ class PgnToFen:
                     pgnToFen = PgnToFen()
                     pgnToFen.resetBoard()
                     fens = pgnToFen.moves(pgnMoves).getAllFens()
+                    nrReCompile = re.compile('[0-9]+\.')
+                    transformedMoves = nrReCompile.sub('', pgnMoves)
+                    pgnMoves1 = transformedMoves.replace('  ', ' ').split(' ')
+                    self.gameMoves = pgnMoves1
                     pgnGames['succeeded'].append((game_info, fens))
                 except ValueError as e:
                     pgnGames['failed'].append((game_info, '"' + pgnToFen.lastMove + '"', pgnToFen.getFullFen(), e))
