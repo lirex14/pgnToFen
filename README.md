@@ -5,7 +5,7 @@ A chess library, where the only purpose is to convert a PGN structur to FEN.
 
 http://www.chess-poster.com/english/fen/fen_epd_viewer.htm
 http://www.chess-poster.com/english/lt_pgn_to_fen/lt_pgn_fen.htm
-
+https://anytree.readthedocs.io/en/2.6.0/intro.html#overview
 ## Usage
 
 The lib exposes several methods, to be used.
